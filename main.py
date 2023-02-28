@@ -43,6 +43,8 @@ def contains_word(message_text, words):
 
 @app.on_message(filters=filters.chat(-1001099350027))
 async def forward_message_to_group(client, message):
+    if any(word.lower() in message.text.lower() for word in texts.blacklist):
+        return
     for topic_name, topic_words, reply_to_message_id in topics:
         if contains_word(message.text, topic_words):
             keyboard = InlineKeyboardMarkup(2)
@@ -50,6 +52,7 @@ async def forward_message_to_group(client, message):
                       InlineKeyboardButton(text='🗑️', callback_data='trash'))
             await bot.send_message(-1001826083519, message.text, reply_to_message_id=reply_to_message_id, parse_mode='markdown', disable_web_page_preview = True, reply_markup=keyboard)
             break
+
 
 @dp.callback_query_handler(text = 'trash')
 async def trash(callback: types.CallbackQuery):
