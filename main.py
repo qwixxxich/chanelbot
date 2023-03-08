@@ -41,6 +41,11 @@ def contains_word(message_text, words):
             return True
     return False
 
+
+@dp.message_handler(text="check")
+async def check(message: types.Message):
+    await message.answer("Бот запущен!")
+
 @app.on_message(filters=filters.chat(-1001099350027))
 async def forward_message_to_group(client, message):
     if any(word.lower() in message.text.lower() for word in texts.blacklist):
